@@ -22,13 +22,13 @@ type event interface {
 
 type Basket struct {
 	ID          int64
-	Items       []vos.BasketItem
+	Items       []*vos.BasketItem
 	TotalWeight int64
 
 	Events []event
 }
 
-func NewBasket(id int64, items []vos.BasketItem) *Basket {
+func NewBasket(id int64, items []*vos.BasketItem) *Basket {
 	return &Basket{ID: id, Items: items}
 }
 
@@ -41,14 +41,20 @@ func (b *Basket) AddItem(item vos.BasketItem) error {
 		return ErrFullBasket
 	}
 
+	var itemExists bool
 	for i, itemFromBasket := range b.Items {
 		if itemFromBasket.GoodID == item.GoodID {
+			itemExists = true
 			b.Items[i].Quantity += item.Quantity
 		}
 	}
-
-	b.Items = append(b.Items, vos.BasketItem{GoodID: item.GoodID, Quantity: item.Quantity})
 	b.TotalWeight += item.Weight
+
+	if itemExists {
+		return nil
+	}
+
+	b.Items = append(b.Items, &vos.BasketItem{GoodID: item.GoodID, Quantity: item.Quantity, BasketID: b.ID})
 
 	return nil
 }

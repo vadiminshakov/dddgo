@@ -5,6 +5,7 @@ import (
 	"errors"
 	"examplegood/broker"
 	"examplegood/core/domain/vos"
+	"examplegood/repository"
 )
 
 var (
@@ -16,20 +17,13 @@ const (
 	maxBasketWeight = 10000 // 10 кг
 )
 
-type ItemsRepository interface {
-	// GetBasketItems возвращает товары в корзине
-	GetByBasketID(id int64) (*vos.BasketItem, error) // Save сохраняет корзину
-	// Save сохраняет позицию в корзине
-	Save(basket *vos.BasketItem) error
-}
-
 type anemicBasketService struct {
-	basketRepo BasketRepository
-	itemsRepo  ItemsRepository
+	basketRepo repository.BasketRepository
+	itemsRepo  repository.ItemsRepository
 	producer   broker.Producer
 }
 
-func NewAnemicBasketService(basketRepo BasketRepository, itemsRepo ItemsRepository) *anemicBasketService {
+func NewAnemicBasketService(basketRepo repository.BasketRepository, itemsRepo repository.ItemsRepository) *anemicBasketService {
 	return &anemicBasketService{basketRepo: basketRepo, itemsRepo: itemsRepo}
 }
 

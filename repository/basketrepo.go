@@ -1,17 +1,25 @@
 package repository
 
-import "examplegood/core/domain/aggregates"
+import (
+	"database/sql"
+	"examplegood/core/domain/aggregates"
+)
 
-type BasketRepository struct {
+type Basket struct {
+	db *sql.DB
 }
 
-func (r *BasketRepository) GetByID(id int64) (*aggregates.Basket, error) {
+func NewBasketRepo(db *sql.DB) *Basket {
+	return &Basket{db: db}
+}
+
+func (r *Basket) GetByID(id int64) (*aggregates.Basket, error) {
 	// TODO: implement
 
 	return &aggregates.Basket{}, nil
 }
 
-func (r *BasketRepository) Save(basket *aggregates.Basket) error {
+func (r *Basket) Save(basket *aggregates.Basket) error {
 	// TODO: implement
 
 	return nil

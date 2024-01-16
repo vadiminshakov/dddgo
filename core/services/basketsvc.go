@@ -1,9 +1,12 @@
 package services
 
 import (
+	"encoding/json"
 	"examplegood/broker"
 	"examplegood/core/domain/aggregates"
 	"examplegood/core/domain/vos"
+	"examplegood/repository"
+	"strconv"
 )
 
 // driver port
@@ -16,25 +19,17 @@ type BasketService interface {
 	TotalPrice() float64
 }
 
-// driven port
-type BasketRepository interface {
-	// GetByID возвращает корзину по идентификатору
-	GetByID(id int64) (*aggregates.Basket, error)
-	// Save сохраняет корзину
-	Save(basket *aggregates.Basket) error
-}
-
 type basketService struct {
-	basketRepo BasketRepository
-	producer   broker.Producer
+	repo     repository.Repository
+	producer broker.Producer
 }
 
-func NewBasketService(basketRepo BasketRepository) *basketService {
-	return &basketService{basketRepo: basketRepo}
+func NewBasketService(repo repository.Repository) *basketService {
+	return &basketService{repo: repo}
 }
 
 func (s *basketService) AddItem(basketID int64, item vos.BasketItem) error {
-	basket, err := s.basketRepo.GetByID(basketID)
+	basket, err := s.repo.Basket().GetByID(basketID)
 	if err != nil {
 		return err
 	}
@@ -43,11 +38,38 @@ func (s *basketService) AddItem(basketID int64, item vos.BasketItem) error {
 		return err
 	}
 
-	if err := s.basketRepo.Save(basket); err != nil {
+	if err := s.repo.Basket().Save(basket); err != nil {
 		return err
 	}
 
 	return s.sendEvents(basket)
+}
+
+// not very good naming, but it's for demonstration of transaction method usage
+func (s *basketService) AddItemWithTx(basketID int64, item vos.BasketItem) error {
+	basket, err := s.repo.Basket().GetByID(basketID)
+	if err != nil {
+		return err
+	}
+
+	if err := basket.AddItem(item); err != nil {
+		return err
+	}
+
+	return s.repo.Transaction(func(repo *repository.RepoRegistry) error {
+		if err := s.repo.Basket().Save(basket); err != nil {
+			return err
+		}
+		bytesBasket, err := json.Marshal(basket)
+		if err != nil {
+			return err
+		}
+		if err := s.repo.Outbox().Save(strconv.Itoa(int(basketID)), bytesBasket); err != nil {
+			return err
+		}
+
+		return nil
+	})
 }
 
 func (s *basketService) sendEvents(basket *aggregates.Basket) error {

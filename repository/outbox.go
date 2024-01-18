@@ -1,14 +1,14 @@
 package repository
 
 import (
-	"database/sql"
+	"github.com/jackc/pgx/v5"
 )
 
 type outboxRepo struct {
-	db *sql.DB
+	db *pgx.Conn
 }
 
-func NewOutboxRepo(db *sql.DB) *outboxRepo {
+func NewOutboxRepo(db *pgx.Conn) *outboxRepo {
 	return &outboxRepo{db: db}
 }
 

@@ -1,15 +1,15 @@
 package repository
 
 import (
-	"database/sql"
 	"examplegood/core/domain/vos"
+	"github.com/jackc/pgx/v5"
 )
 
 type Items struct {
-	db *sql.DB
+	db *pgx.Conn
 }
 
-func NewItemsRepo(db *sql.DB) *Items {
+func NewItemsRepo(db *pgx.Conn) *Items {
 	return &Items{db: db}
 }
 

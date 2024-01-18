@@ -1,15 +1,15 @@
 package repository
 
 import (
-	"database/sql"
 	"examplegood/core/domain/aggregates"
+	"github.com/jackc/pgx/v5"
 )
 
 type Basket struct {
-	db *sql.DB
+	db *pgx.Conn
 }
 
-func NewBasketRepo(db *sql.DB) *Basket {
+func NewBasketRepo(db *pgx.Conn) *Basket {
 	return &Basket{db: db}
 }
 

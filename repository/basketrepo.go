@@ -1,21 +1,22 @@
 package repository
 
 import (
+	"database/sql"
 	"examplegood/core/domain/aggregates"
-	"github.com/jackc/pgx/v5"
 )
 
 type Basket struct {
-	db *pgx.Conn
+	db *sql.DB
+	tx Tx
 }
 
-func NewBasketRepo(db *pgx.Conn) *Basket {
+func NewBasketRepo(db *sql.DB) *Basket {
 	return &Basket{db: db}
 }
 
 func (r *Basket) GetByID(id int64) (*aggregates.Basket, error) {
 	// TODO: implement
-
+	r.tx.Exec("INSERT INTO x VALUES (1);")
 	return &aggregates.Basket{}, nil
 }
 

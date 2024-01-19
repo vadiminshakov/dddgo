@@ -2,10 +2,9 @@ package repository
 
 import (
 	"context"
+	"database/sql"
 	"examplegood/core/domain/aggregates"
 	"examplegood/core/domain/vos"
-	"github.com/jackc/pgx/v5"
-	"os"
 )
 
 // driven port
@@ -37,50 +36,41 @@ type Repository interface {
 }
 
 type RepoRegistry struct {
-	db *pgx.Conn
+	db *sql.DB
+	tx Tx
 }
 
-func New(conn *pgx.Conn) (*RepoRegistry, error) {
-	if conn != nil {
-		return &RepoRegistry{db: conn}, nil
-	}
-
-	conn, err := pgx.Connect(context.Background(), os.Getenv("DATABASE_URL"))
-	if err != nil {
-		return nil, err
-	}
-	defer conn.Close(context.Background())
-
-	return &RepoRegistry{conn}, nil
+func New(db *sql.DB) (*RepoRegistry, error) {
+	return &RepoRegistry{db: db}, nil
 }
 
 func (r *RepoRegistry) Basket() BasketRepository {
-	return NewBasketRepo(r.db)
+	return &Basket{db: r.db, tx: r.tx}
 }
 
 func (r *RepoRegistry) Items() ItemsRepository {
-	return NewItemsRepo(r.db)
+	return &Items{db: r.db, tx: r.tx}
 }
 
 func (r *RepoRegistry) Transaction(ctx context.Context, fn func(repo *RepoRegistry) error) error {
-	tx, err := r.db.Begin(ctx)
+	tx, err := r.db.BeginTx(ctx, nil)
 	if err != nil {
 		return err
 	}
 
-	newrepo, err := New(tx.Conn())
+	newrepo := &RepoRegistry{db: r.db, tx: tx}
 	if err != nil {
 		return err
 	}
 
 	if err := fn(newrepo); err != nil {
-		if err := tx.Rollback(ctx); err != nil {
+		if err := tx.Rollback(); err != nil {
 			return err
 		}
 		return err
 	}
 
-	if err := tx.Commit(ctx); err != nil {
+	if err := tx.Commit(); err != nil {
 		return err
 	}
 

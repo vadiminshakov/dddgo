@@ -59,9 +59,6 @@ func (r *RepoRegistry) Transaction(ctx context.Context, fn func(repo *RepoRegist
 	}
 
 	newrepo := &RepoRegistry{db: r.db, tx: tx}
-	if err != nil {
-		return err
-	}
 
 	if err := fn(newrepo); err != nil {
 		if err := tx.Rollback(); err != nil {
@@ -75,4 +72,10 @@ func (r *RepoRegistry) Transaction(ctx context.Context, fn func(repo *RepoRegist
 	}
 
 	return err
+}
+
+type Tx interface {
+	Exec(query string, args ...interface{}) (sql.Result, error)
+	Query(query string, args ...interface{}) (*sql.Rows, error)
+	QueryRow(query string, args ...interface{}) *sql.Row
 }

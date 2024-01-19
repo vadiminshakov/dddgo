@@ -5,6 +5,7 @@ import (
 	"examplegood/core/domain/aggregates/marketing"
 	"examplegood/core/domain/events"
 	"examplegood/core/domain/vos"
+	"time"
 )
 
 var (
@@ -24,6 +25,7 @@ type Basket struct {
 	ID          int64
 	Items       []*vos.BasketItem
 	TotalWeight int64
+	CreatedAt   time.Time
 
 	Events []event
 }

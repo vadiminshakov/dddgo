@@ -2,26 +2,34 @@ package repository
 
 import (
 	"context"
-	"github.com/jackc/pgx/v5"
+	"database/sql"
 )
 
-type Tx struct {
-	db *pgx.Conn
+type tximpl struct {
+	tx *sql.Tx
 }
 
 type TxManagerRepository struct {
-	db *pgx.Conn
+	db *sql.DB
 }
 
-func NewTxManagerRepo(db *pgx.Conn) *Basket {
-	return &Basket{db: db}
+func NewTxManagerRepo(db *sql.DB) *TxManagerRepository {
+	return &TxManagerRepository{db: db}
 }
 
-func (r *TxManagerRepository) Begin(ctx context.Context) (*Tx, error) {
-	tx, err := r.db.Begin(ctx)
+func (r *TxManagerRepository) Begin(ctx context.Context) (*tximpl, error) {
+	tx, err := r.db.BeginTx(ctx, nil)
 	if err != nil {
 		return nil, err
 	}
 
-	return &Tx{db: tx.Conn()}, nil
+	return &tximpl{tx}, nil
+}
+
+func (r *tximpl) Commit() error {
+	return r.tx.Commit()
+}
+
+func (r *TxManagerRepository) WithTx(tx Tx) *RepoRegistry {
+	return &RepoRegistry{db: r.db, tx: tx}
 }

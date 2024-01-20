@@ -20,11 +20,11 @@ type BasketService interface {
 }
 
 type basketService struct {
-	repo     repository.Repository
+	repo     repository.RepositoryRegistry
 	producer broker.Producer
 }
 
-func NewBasketService(repo repository.Repository) *basketService {
+func NewBasketService(repo repository.RepositoryRegistry) *basketService {
 	return &basketService{repo: repo}
 }
 

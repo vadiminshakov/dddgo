@@ -27,7 +27,7 @@ type Outbox interface {
 	Save(key string, value []byte) error
 }
 
-type Repository interface {
+type RepositoryRegistry interface {
 	Basket() BasketRepository
 	Items() ItemsRepository
 	Outbox() Outbox

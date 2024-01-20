@@ -3,6 +3,7 @@ package repository
 import (
 	"database/sql"
 	"examplegood/core/domain/aggregates"
+	"examplegood/repository/queries"
 )
 
 type Basket struct {
@@ -16,12 +17,12 @@ func NewBasketRepo(db *sql.DB) *Basket {
 
 func (r *Basket) GetByID(id int64) (*aggregates.Basket, error) {
 	// TODO: implement
-	r.tx.Exec("INSERT INTO x VALUES (1);")
+	r.tx.Exec(queries.BasketSave)
 	return &aggregates.Basket{}, nil
 }
 
 func (r *Basket) Save(basket *aggregates.Basket) error {
-	// TODO: implement
+	_, err := r.tx.Exec(queries.BasketSave, basket.ID, basket.TotalWeight)
 
-	return nil
+	return err
 }

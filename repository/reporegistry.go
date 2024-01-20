@@ -9,7 +9,7 @@ import (
 
 // driven port
 type BasketRepository interface {
-	// GetByID возвращает корзину по идентификатору
+	// GetByID returns basket by ID
 	GetByID(id int64) (*aggregates.Basket, error)
 	// Save сохраняет корзину
 	Save(basket *aggregates.Basket) error
@@ -17,9 +17,9 @@ type BasketRepository interface {
 
 // driven port
 type ItemsRepository interface {
-	// GetBasketItems возвращает товары в корзине
-	GetByBasketID(id int64) (*vos.BasketItem, error) // Save сохраняет корзину
-	// Save сохраняет позицию в корзине
+	// GetBasketItems returns items in basket
+	GetByBasketID(id int64) (*vos.BasketItem, error)
+	// Save saves one item in basket
 	Save(basket *vos.BasketItem) error
 }
 

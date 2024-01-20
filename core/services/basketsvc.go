@@ -1,6 +1,7 @@
 package services
 
 import (
+	"context"
 	"encoding/json"
 	"examplegood/broker"
 	"examplegood/core/domain/aggregates"
@@ -46,7 +47,7 @@ func (s *basketService) AddItem(basketID int64, item vos.BasketItem) error {
 }
 
 // not very good naming, but it's for demonstration of transaction method usage
-func (s *basketService) AddItemWithTx(basketID int64, item vos.BasketItem) error {
+func (s *basketService) AddItemWithTx(ctx context.Context, basketID int64, item vos.BasketItem) error {
 	basket, err := s.repo.Basket().GetByID(basketID)
 	if err != nil {
 		return err
@@ -56,7 +57,7 @@ func (s *basketService) AddItemWithTx(basketID int64, item vos.BasketItem) error
 		return err
 	}
 
-	return s.repo.Transaction(func(repo *repository.RepoRegistry) error {
+	return s.repo.Transaction(ctx, func(repo repository.RepositoryRegistry) error {
 		if err := s.repo.Basket().Save(basket); err != nil {
 			return err
 		}

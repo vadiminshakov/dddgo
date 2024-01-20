@@ -31,7 +31,7 @@ type RepositoryRegistry interface {
 	Basket() BasketRepository
 	Items() ItemsRepository
 	Outbox() Outbox
-	Transaction(ctx context.Context, fn func(repo *RepoRegistry) error) error
+	Transaction(ctx context.Context, fn func(repo RepositoryRegistry) error) error
 	TxManager() TxManagerRepository
 }
 

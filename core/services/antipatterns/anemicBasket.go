@@ -1,5 +1,5 @@
 // WARN! Example of workflow with anemic domain model. Domain logic is in service layer. Don't do this.
-package services
+package antipatterns
 
 import (
 	"errors"

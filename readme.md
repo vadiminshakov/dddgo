@@ -11,3 +11,4 @@ The project structure demonstrates a convenient organization of layers and compo
 ### Antipatterns:
 [Anemic domain model](https://github.com/vadiminshakov/dddgo/blob/main/core/services/antipatterns/anemicBasket.go)
 
+Project is under development.

@@ -1,4 +1,4 @@
-module examplegood
+module github.com/vadiminshakov/dddgo
 
 go 1.21
 

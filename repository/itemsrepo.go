@@ -3,6 +3,7 @@ package repository
 import (
 	"database/sql"
 	"examplegood/core/domain/vos"
+	"examplegood/repository/queries"
 )
 
 type Items struct {
@@ -10,8 +11,11 @@ type Items struct {
 	tx Tx
 }
 
-func NewItemsRepo(db *sql.DB) *Items {
-	return &Items{db: db}
+func NewItemsRepo(db *sql.DB, tx Tx) *Items {
+	if tx == nil {
+		return &Items{tx: db}
+	}
+	return &Items{tx: tx}
 }
 
 func (r *Items) GetByBasketID(id int64) (*vos.BasketItem, error) {
@@ -20,8 +24,8 @@ func (r *Items) GetByBasketID(id int64) (*vos.BasketItem, error) {
 	return &vos.BasketItem{}, nil
 }
 
-func (r *Items) Save(basket *vos.BasketItem) error {
-	// TODO: implement
+func (r *Items) Save(item *vos.BasketItem) error {
+	_, err := r.tx.Exec(queries.ItemsSave, item.BasketID, item.GoodID, item.Quantity, item.Price, item.Weight)
 
-	return nil
+	return err
 }

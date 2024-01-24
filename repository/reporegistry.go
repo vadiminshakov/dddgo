@@ -40,16 +40,19 @@ type RepoRegistry struct {
 	tx Tx
 }
 
-func New(db *sql.DB) (*RepoRegistry, error) {
-	return &RepoRegistry{db: db}, nil
+func New(db *sql.DB, tx Tx) (*RepoRegistry, error) {
+	if tx == nil {
+		return &RepoRegistry{tx: db, db: db}, nil
+	}
+	return &RepoRegistry{db: db, tx: tx}, nil
 }
 
 func (r *RepoRegistry) Basket() BasketRepository {
-	return &Basket{db: r.db, tx: r.tx}
+	return NewBasketRepo(r.db, r.tx)
 }
 
 func (r *RepoRegistry) Items() ItemsRepository {
-	return &Items{db: r.db, tx: r.tx}
+	return NewItemsRepo(r.db, r.tx)
 }
 
 func (r *RepoRegistry) Transaction(ctx context.Context, fn func(repo *RepoRegistry) error) error {
@@ -58,7 +61,10 @@ func (r *RepoRegistry) Transaction(ctx context.Context, fn func(repo *RepoRegist
 		return err
 	}
 
-	newrepo := &RepoRegistry{db: r.db, tx: tx}
+	newrepo, err := New(r.db, tx)
+	if err != nil {
+		return err
+	}
 
 	if err := fn(newrepo); err != nil {
 		if err := tx.Rollback(); err != nil {

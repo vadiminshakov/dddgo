@@ -11,12 +11,14 @@ type Basket struct {
 	tx Tx
 }
 
-func NewBasketRepo(db *sql.DB) *Basket {
-	return &Basket{db: db}
+func NewBasketRepo(db *sql.DB, tx Tx) *Basket {
+	if tx == nil {
+		return &Basket{tx: db}
+	}
+	return &Basket{tx: tx}
 }
 
 func (r *Basket) GetByID(id int64) (*aggregates.Basket, error) {
-	// TODO: implement
 	r.tx.Exec(queries.BasketSave)
 	return &aggregates.Basket{}, nil
 }

@@ -2,8 +2,9 @@ package repository
 
 import (
 	"database/sql"
-	"examplegood/core/domain/vos"
-	"examplegood/repository/queries"
+
+	"github.com/vadiminshakov/dddgo/core/domain/vos"
+	"github.com/vadiminshakov/dddgo/repository/queries"
 )
 
 type Items struct {

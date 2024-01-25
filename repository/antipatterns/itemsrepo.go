@@ -2,9 +2,10 @@ package antipatterns
 
 import (
 	"database/sql"
-	"examplegood/core/domain/vos"
-	"examplegood/repository"
-	"examplegood/repository/queries"
+
+	"github.com/vadiminshakov/dddgo/core/domain/vos"
+	"github.com/vadiminshakov/dddgo/repository"
+	"github.com/vadiminshakov/dddgo/repository/queries"
 )
 
 type TxItems struct {

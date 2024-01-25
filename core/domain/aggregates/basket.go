@@ -2,10 +2,11 @@ package aggregates
 
 import (
 	"errors"
-	"examplegood/core/domain/aggregates/marketing"
-	"examplegood/core/domain/events"
-	"examplegood/core/domain/vos"
 	"time"
+
+	"github.com/vadiminshakov/dddgo/core/domain/aggregates/marketing"
+	"github.com/vadiminshakov/dddgo/core/domain/events"
+	"github.com/vadiminshakov/dddgo/core/domain/vos"
 )
 
 var (

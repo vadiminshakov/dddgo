@@ -3,8 +3,9 @@ package repository
 import (
 	"context"
 	"database/sql"
-	"examplegood/core/domain/aggregates"
-	"examplegood/core/domain/vos"
+
+	"github.com/vadiminshakov/dddgo/core/domain/aggregates"
+	"github.com/vadiminshakov/dddgo/core/domain/vos"
 )
 
 // driven port

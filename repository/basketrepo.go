@@ -2,8 +2,9 @@ package repository
 
 import (
 	"database/sql"
-	"examplegood/core/domain/aggregates"
-	"examplegood/repository/queries"
+
+	"github.com/vadiminshakov/dddgo/core/domain/aggregates"
+	"github.com/vadiminshakov/dddgo/repository/queries"
 )
 
 type Basket struct {

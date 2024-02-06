@@ -3,11 +3,12 @@ package services
 import (
 	"context"
 	"encoding/json"
-	"examplegood/broker"
-	"examplegood/core/domain/aggregates"
-	"examplegood/core/domain/vos"
-	"examplegood/repository"
 	"strconv"
+
+	"github.com/vadiminshakov/dddgo/broker"
+	"github.com/vadiminshakov/dddgo/core/domain/aggregates"
+	"github.com/vadiminshakov/dddgo/core/domain/vos"
+	"github.com/vadiminshakov/dddgo/repository"
 )
 
 // driver port

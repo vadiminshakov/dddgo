@@ -3,9 +3,10 @@ package antipatterns
 
 import (
 	"errors"
-	"examplegood/broker"
-	"examplegood/core/domain/vos"
-	"examplegood/repository"
+
+	"github.com/vadiminshakov/dddgo/broker"
+	"github.com/vadiminshakov/dddgo/core/domain/vos"
+	"github.com/vadiminshakov/dddgo/repository"
 )
 
 var (

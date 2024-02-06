@@ -4,10 +4,11 @@ package antipatterns
 import (
 	"context"
 	"database/sql"
-	"examplegood/broker"
-	"examplegood/core/domain/aggregates"
-	"examplegood/core/domain/vos"
-	"examplegood/repository/antipatterns"
+
+	"github.com/vadiminshakov/dddgo/broker"
+	"github.com/vadiminshakov/dddgo/core/domain/aggregates"
+	"github.com/vadiminshakov/dddgo/core/domain/vos"
+	"github.com/vadiminshakov/dddgo/repository/antipatterns"
 )
 
 // driven port

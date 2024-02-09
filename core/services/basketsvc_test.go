@@ -47,6 +47,10 @@ func TestBasketService_AddItemWithTx(t *testing.T) {
 		Price:    1,
 	})
 	require.NoError(t, err)
+
+	repoRegistry.AssertExpectations(t)
+	repoBasket.AssertExpectations(t)
+	outbox.AssertExpectations(t)
 }
 
 const callBackFnTmpl = "func(repository.RepositoryRegistry) error"
